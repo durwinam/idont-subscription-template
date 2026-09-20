@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="color-scheme" content="dark light">
-  <title>پنل کاربری</title>
+  <title>idont-subscription</title>
   <style>
     @font-face {
       font-family: Vazirmatn;
@@ -2200,7 +2200,511 @@
       .chart-shell .chart, .smooth-chart { min-height: 300px; }
     }
 
-  </style>
+  
+    /* ------------------------------------------------------------------
+       idont-subscription / Aurora Crimson visual layer
+       The data/API layer above remains untouched. This layer is UI only.
+       ------------------------------------------------------------------ */
+    :root {
+      --id-red: #ff2948;
+      --id-red-hot: #ff5a70;
+      --id-red-deep: #b70f2b;
+      --id-pink: #ff8b9a;
+      --id-gold: #e7b96b;
+      --id-bg: #050306;
+      --id-panel: rgba(17, 10, 14, .70);
+      --id-panel-2: rgba(9, 8, 12, .74);
+      --id-border: rgba(255, 70, 92, .22);
+      --id-border-soft: rgba(255, 255, 255, .075);
+      --id-shadow: 0 28px 80px rgba(0, 0, 0, .42);
+    }
+
+    html[data-theme="light"] {
+      --id-bg: #fffafb;
+      --id-panel: rgba(255, 255, 255, .74);
+      --id-panel-2: rgba(255, 247, 249, .78);
+      --id-border: rgba(196, 20, 46, .18);
+      --id-border-soft: rgba(60, 10, 18, .075);
+      --id-shadow: 0 24px 70px rgba(125, 20, 35, .11);
+    }
+
+    body {
+      position: relative;
+      isolation: isolate;
+      background:
+        radial-gradient(70vw 45vw at 5% -8%, rgba(255, 30, 60, .20), transparent 66%),
+        radial-gradient(55vw 40vw at 100% 12%, rgba(255, 0, 45, .13), transparent 68%),
+        radial-gradient(40vw 35vw at 58% 105%, rgba(185, 0, 35, .11), transparent 72%),
+        linear-gradient(145deg, #030204 0%, #080609 46%, #020203 100%);
+    }
+
+    body::before {
+      opacity: .32;
+      background:
+        linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.014) 1px, transparent 1px),
+        radial-gradient(circle at 18% 30%, rgba(255, 40, 65, .10) 0 1px, transparent 1.7px),
+        radial-gradient(circle at 78% 70%, rgba(255, 80, 100, .08) 0 1px, transparent 1.7px);
+      background-size: 48px 48px, 48px 48px, 170px 170px, 230px 230px;
+      animation: idont-grid 30s linear infinite;
+    }
+
+    body::after {
+      inset: -30%;
+      opacity: .95;
+      filter: blur(48px) saturate(125%);
+      background:
+        radial-gradient(circle at 12% 20%, rgba(255, 32, 58, .18), transparent 19%),
+        radial-gradient(circle at 88% 18%, rgba(255, 60, 80, .12), transparent 18%),
+        radial-gradient(circle at 52% 78%, rgba(198, 0, 35, .10), transparent 23%);
+      animation: idont-aurora 22s ease-in-out infinite alternate;
+    }
+
+    @keyframes idont-aurora {
+      0% { transform: translate3d(-2%, -1%, 0) scale(1); }
+      50% { transform: translate3d(2%, 1%, 0) scale(1.035); }
+      100% { transform: translate3d(-1%, 2%, 0) scale(1.02); }
+    }
+
+    html[data-theme="light"] body {
+      background:
+        radial-gradient(65vw 44vw at 2% -8%, rgba(255, 34, 60, .14), transparent 66%),
+        radial-gradient(52vw 38vw at 100% 8%, rgba(255, 90, 110, .10), transparent 68%),
+        radial-gradient(42vw 36vw at 50% 105%, rgba(255, 35, 60, .075), transparent 72%),
+        linear-gradient(145deg, #ffffff 0%, #fff8f9 48%, #fff 100%);
+    }
+
+    .shell {
+      max-width: 1160px;
+      position: relative;
+    }
+
+    .topbar {
+      position: sticky;
+      top: max(12px, env(safe-area-inset-top));
+      z-index: 40;
+      min-height: 74px;
+      padding: 12px 14px;
+      border: 1px solid var(--id-border) !important;
+      background: linear-gradient(135deg, rgba(22, 10, 15, .72), rgba(7, 7, 10, .56)) !important;
+      box-shadow: 0 18px 50px rgba(0,0,0,.28), 0 0 38px rgba(255, 32, 55, .055), inset 0 1px 0 rgba(255,255,255,.08);
+    }
+
+    html[data-theme="light"] .topbar {
+      background: linear-gradient(135deg, rgba(255,255,255,.82), rgba(255,244,246,.64)) !important;
+      box-shadow: 0 18px 50px rgba(120,20,35,.09), 0 0 38px rgba(255, 32, 55, .04), inset 0 1px 0 rgba(255,255,255,.98);
+    }
+
+    .brand-logo {
+      width: 48px;
+      height: 48px;
+      border-radius: 17px;
+      border-color: rgba(255, 70, 90, .30) !important;
+      background: radial-gradient(circle at 30% 20%, rgba(255,255,255,.13), rgba(255,35,60,.10) 45%, rgba(255,35,60,.025));
+      box-shadow: 0 0 0 1px rgba(255,255,255,.03), 0 0 30px rgba(255,30,55,.15), inset 0 1px 0 rgba(255,255,255,.12);
+    }
+
+    .brand-title { letter-spacing: -.03em; }
+    .brand-sub { opacity: .62; }
+
+    .actions .icon-btn,
+    .profile-shortcut,
+    .hero-action,
+    .range-btn,
+    .ghost {
+      border-color: rgba(255, 70, 90, .20) !important;
+      background: rgba(255, 255, 255, .035) !important;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.06), 0 8px 24px rgba(0,0,0,.12);
+    }
+
+    .account-grid { gap: 18px; }
+
+    .profile,
+    .usage,
+    #view-configs > .panel,
+    #view-apps > .panel {
+      overflow: hidden;
+      position: relative;
+      border-radius: 30px;
+      border-color: var(--id-border) !important;
+      background:
+        radial-gradient(90% 130% at 95% 0%, rgba(255, 35, 60, .10), transparent 56%),
+        linear-gradient(145deg, rgba(255,255,255,.065), rgba(255,255,255,.014) 45%, rgba(255, 30, 50, .025)) !important;
+      box-shadow: var(--id-shadow), 0 0 42px rgba(255, 30, 50, .045), inset 0 1px 0 rgba(255,255,255,.075);
+    }
+
+    html[data-theme="light"] .profile,
+    html[data-theme="light"] .usage,
+    html[data-theme="light"] #view-configs > .panel,
+    html[data-theme="light"] #view-apps > .panel {
+      background:
+        radial-gradient(90% 120% at 95% 0%, rgba(255, 40, 65, .08), transparent 56%),
+        linear-gradient(145deg, rgba(255,255,255,.88), rgba(255,245,247,.68)) !important;
+      box-shadow: var(--id-shadow), 0 0 42px rgba(255, 30, 50, .035), inset 0 1px 0 rgba(255,255,255,.98);
+    }
+
+    .profile {
+      min-height: 470px;
+      padding: 28px;
+    }
+
+    .hero-layout {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(250px, .65fr);
+      gap: 24px;
+      align-items: center;
+    }
+
+    .hero-copy { min-width: 0; }
+
+    .hero-kicker,
+    .section-kicker {
+      display: inline-block;
+      margin-bottom: 7px;
+      color: var(--id-red-hot);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .hero-heading { margin-top: 28px; }
+
+    .username {
+      margin: 0;
+      max-width: 100%;
+      font-size: clamp(31px, 4vw, 52px);
+      line-height: 1.05;
+      letter-spacing: -.045em;
+      text-wrap: balance;
+    }
+
+    .subline {
+      max-width: 620px;
+      margin-top: 13px;
+      font-size: 15px;
+      opacity: .62;
+    }
+
+    .profile-shortcuts {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .hero-action {
+      min-height: 46px;
+      padding: 0 17px;
+      border-radius: 15px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      color: var(--ink);
+      transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease, background .2s ease;
+    }
+
+    .hero-action:hover { transform: translateY(-2px); border-color: rgba(255, 70, 90, .48) !important; box-shadow: 0 12px 30px rgba(255, 30, 50, .12); }
+
+    .hero-action-primary {
+      color: #fff;
+      border-color: rgba(255, 80, 100, .52) !important;
+      background: linear-gradient(135deg, rgba(255, 35, 62, .90), rgba(174, 10, 34, .82)) !important;
+      box-shadow: 0 10px 34px rgba(255, 25, 50, .18), inset 0 1px 0 rgba(255,255,255,.16);
+    }
+
+    .hero-expiry-wrap { display: grid; place-items: center; }
+
+    .expiry-card {
+      width: min(100%, 340px);
+      min-height: 300px;
+      padding: 18px;
+      border-radius: 25px;
+      position: relative;
+      overflow: hidden;
+      border-color: rgba(255, 70, 90, .20) !important;
+      background:
+        radial-gradient(circle at 50% 46%, rgba(255, 30, 55, .12), transparent 43%),
+        linear-gradient(145deg, rgba(255,255,255,.06), rgba(255, 25, 45, .035)) !important;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.07), 0 22px 60px rgba(0,0,0,.20), 0 0 45px rgba(255,30,55,.055);
+    }
+
+    .expiry-card::after {
+      content: "";
+      position: absolute;
+      width: 180px;
+      height: 180px;
+      left: 50%;
+      top: 52%;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      background: rgba(255, 35, 60, .09);
+      filter: blur(36px);
+      pointer-events: none;
+    }
+
+    .expiry-head,
+    .expiry-meta,
+    .donut-wrap { position: relative; z-index: 2; }
+
+    .donut {
+      width: 190px;
+      height: 190px;
+      margin: 8px auto 4px;
+      background: conic-gradient(from -90deg, var(--id-red-hot) 0 var(--progress), rgba(255,255,255,.07) var(--progress) 100%);
+      box-shadow: 0 0 0 1px rgba(255,255,255,.05), 0 0 32px rgba(255,35,60,.17), 0 0 80px rgba(255,35,60,.07), inset 0 0 28px rgba(255,35,60,.08);
+    }
+
+    .donut::before {
+      inset: 11px;
+      background: radial-gradient(circle at 35% 28%, rgba(255,255,255,.08), rgba(11,8,11,.93) 62%);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.06), inset 0 0 35px rgba(255,35,60,.10);
+    }
+
+    html[data-theme="light"] .donut::before {
+      background: radial-gradient(circle at 35% 28%, rgba(255,255,255,.95), rgba(255,243,245,.96) 62%);
+      box-shadow: inset 0 0 0 1px rgba(120,20,30,.07), inset 0 0 35px rgba(255,35,60,.07);
+    }
+
+    .donut-center strong { font-size: 37px; color: var(--id-red-hot); text-shadow: 0 0 18px rgba(255,40,65,.20); }
+
+    .hero-orb {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      filter: blur(1px);
+      mix-blend-mode: screen;
+      opacity: .65;
+    }
+
+    .hero-orb-a { width: 320px; height: 320px; top: -180px; left: 34%; background: radial-gradient(circle, rgba(255,30,55,.22), transparent 68%); animation: idont-float 11s ease-in-out infinite; }
+    .hero-orb-b { width: 240px; height: 240px; bottom: -150px; right: -80px; background: radial-gradient(circle, rgba(255,80,100,.15), transparent 68%); animation: idont-float 14s ease-in-out infinite reverse; }
+
+    .hero-spark { position: absolute; width: 5px; height: 5px; border-radius: 50%; background: #fff; box-shadow: 0 0 10px #ff6677, 0 0 22px rgba(255,40,60,.7); opacity: .75; animation: idont-spark 4.5s ease-in-out infinite; }
+    .spark-a { top: 22%; left: 48%; }
+    .spark-b { top: 64%; right: 11%; animation-delay: 1.7s; }
+
+    @keyframes idont-float { 0%,100% { transform: translate3d(0,0,0); } 50% { transform: translate3d(14px, 10px, 0); } }
+    @keyframes idont-spark { 0%,100% { opacity: .25; transform: scale(.8); } 45% { opacity: 1; transform: scale(1.15); } }
+
+    .hero-wave {
+      position: absolute;
+      z-index: 1;
+      left: -2%;
+      right: -2%;
+      bottom: 94px;
+      height: 100px;
+      opacity: .75;
+      pointer-events: none;
+      filter: drop-shadow(0 0 10px rgba(255,35,60,.18));
+    }
+
+    .hero-wave svg { width: 100%; height: 100%; }
+
+    .metrics {
+      position: relative;
+      z-index: 3;
+      margin-top: 26px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 11px;
+    }
+
+    .metrics .metric {
+      min-height: 100px;
+      padding: 15px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,70,90,.13);
+      background: linear-gradient(145deg, rgba(255,255,255,.045), rgba(255,30,50,.025));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.055), 0 10px 28px rgba(0,0,0,.10);
+      transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+    }
+
+    .metrics .metric:hover { transform: translateY(-3px); border-color: rgba(255,70,90,.28); box-shadow: 0 14px 34px rgba(0,0,0,.16), 0 0 24px rgba(255,30,50,.06); }
+    .metrics .stat-top { gap: 9px; }
+    .metrics .stat-icon { width: 35px; height: 35px; border-radius: 12px; background: rgba(255,35,60,.08) !important; color: var(--id-red-hot) !important; }
+    .metrics .v { margin-top: 10px; font-size: 18px; font-weight: 800; letter-spacing: -.025em; }
+
+    .detail-grid {
+      position: relative;
+      z-index: 3;
+      margin-top: 11px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 11px;
+    }
+
+    .detail-grid .detail {
+      min-width: 0;
+      padding: 13px 14px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.055);
+      background: rgba(0,0,0,.16);
+    }
+
+    html[data-theme="light"] .detail-grid .detail { background: rgba(255,255,255,.52); border-color: rgba(100,20,30,.065); }
+
+    .usage { padding: 24px; }
+    .usage-head { align-items: flex-end; }
+    .usage-head .title { margin-top: 0; }
+
+    .chart-shell-premium {
+      margin-top: 14px;
+      padding: 8px 10px 4px;
+      border-radius: 24px;
+      border: 1px solid rgba(255,70,90,.14);
+      background: radial-gradient(80% 100% at 50% 100%, rgba(255,30,50,.06), transparent 68%), rgba(0,0,0,.12);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.045), inset 0 -20px 60px rgba(255,30,50,.025);
+    }
+
+    html[data-theme="light"] .chart-shell-premium { background: radial-gradient(80% 100% at 50% 100%, rgba(255,30,50,.055), transparent 68%), rgba(255,255,255,.44); }
+
+    .smooth-chart { min-height: 330px; overflow: visible; }
+    .smooth-chart .grid-line { stroke: rgba(255,255,255,.065); stroke-dasharray: 3 8; }
+    html[data-theme="light"] .smooth-chart .grid-line { stroke: rgba(100,20,30,.09); }
+    .smooth-chart .area { fill: url(#idontArea); opacity: .9; }
+    .smooth-chart .line { stroke: var(--id-red-hot); stroke-width: 3.2; filter: drop-shadow(0 0 7px rgba(255,40,65,.55)); }
+    .smooth-chart .point { fill: var(--id-red-hot); stroke: rgba(255,255,255,.85); stroke-width: 1.1; filter: drop-shadow(0 0 5px rgba(255,40,65,.60)); }
+    .smooth-chart .axis-label { fill: var(--muted); font-size: 11px; }
+
+    .range {
+      padding: 4px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,70,90,.13);
+      background: rgba(0,0,0,.16);
+    }
+    .range-btn { min-width: 62px; min-height: 36px; border-radius: 10px; }
+    .range-btn.active { color: #fff; background: linear-gradient(135deg, rgba(255,35,60,.88), rgba(178,10,34,.82)) !important; border-color: rgba(255,100,115,.42) !important; box-shadow: 0 8px 22px rgba(255,30,50,.15); }
+
+    .config-card,
+    .app-card {
+      border-color: rgba(255,70,90,.14) !important;
+      background: linear-gradient(145deg, rgba(255,255,255,.045), rgba(255,25,45,.024)) !important;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.05), 0 12px 34px rgba(0,0,0,.12);
+      transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+    }
+    .config-card:hover,
+    .app-card:hover { transform: translateY(-2px); border-color: rgba(255,70,90,.28) !important; box-shadow: 0 18px 40px rgba(0,0,0,.18), 0 0 24px rgba(255,30,50,.05); }
+
+    .os-grid { display: grid; gap: 13px; }
+    .os-card {
+      overflow: hidden;
+      padding: 0 !important;
+      border: 1px solid rgba(255,70,90,.13) !important;
+      border-radius: 22px;
+      background: linear-gradient(145deg, rgba(255,255,255,.045), rgba(255,25,45,.024)) !important;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.05), 0 14px 36px rgba(0,0,0,.12);
+    }
+    .os-card.current { border-color: rgba(255,70,90,.28) !important; box-shadow: 0 0 30px rgba(255,30,50,.07), inset 0 1px 0 rgba(255,255,255,.06); }
+    .os-toggle {
+      width: 100%;
+      min-height: 88px;
+      border: 0;
+      padding: 15px 18px;
+      display: grid;
+      grid-template-columns: auto minmax(0,1fr) auto;
+      align-items: center;
+      gap: 14px;
+      text-align: inherit;
+      background: transparent;
+    }
+    .os-toggle:hover { background: rgba(255,35,60,.035); }
+    .os-icon { width: 50px; height: 50px; border-radius: 16px; display: grid; place-items: center; color: var(--id-red-hot); background: rgba(255,35,60,.07); border: 1px solid rgba(255,70,90,.14); box-shadow: inset 0 1px 0 rgba(255,255,255,.06), 0 0 24px rgba(255,30,50,.06); }
+    .os-icon svg { width: 27px; height: 27px; }
+    .os-info { min-width: 0; }
+    .os-top { display: flex; align-items: center; gap: 8px; justify-content: space-between; }
+    .os-name { font-size: 17px; font-weight: 800; }
+    .os-count { display: block; margin-top: 4px; font-size: 12px; color: var(--muted); }
+    .os-chevron { width: 38px; height: 38px; display: grid; place-items: center; border-radius: 12px; color: var(--muted); background: rgba(255,255,255,.035); transition: transform .25s ease, color .25s ease, background .25s ease; }
+    .os-chevron svg { width: 18px; height: 18px; }
+    .os-card.open .os-chevron { transform: rotate(180deg); color: var(--id-red-hot); background: rgba(255,35,60,.08); }
+    .os-content { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .32s ease, opacity .25s ease; opacity: 0; }
+    .os-card.open .os-content { grid-template-rows: 1fr; opacity: 1; }
+    .os-content > .inline-app-list { min-height: 0; overflow: hidden; padding: 0 14px; }
+    .os-card.open .os-content > .inline-app-list { padding-bottom: 14px; }
+    .inline-app-list { display: grid; gap: 10px; }
+    .inline-app-list .app-card { margin: 0; }
+
+    .app-card { border-radius: 18px; }
+    .app-actions a { border-radius: 12px; }
+    .app-actions .action-download { background: rgba(255,35,60,.10) !important; border-color: rgba(255,70,90,.24) !important; color: var(--id-red-hot) !important; }
+    .app-actions .action-import { background: rgba(255,255,255,.035) !important; }
+
+    .modal { padding: max(18px, env(safe-area-inset-top)) 14px max(18px, env(safe-area-inset-bottom)); }
+    .sheet,
+    .qr-box { width: min(720px, 100%); max-height: min(88dvh, 760px); border-radius: 28px !important; border-color: rgba(255,70,90,.22) !important; box-shadow: 0 34px 100px rgba(0,0,0,.52), 0 0 50px rgba(255,30,50,.08), inset 0 1px 0 rgba(255,255,255,.08); }
+    .qr-box { width: min(420px, 100%); }
+    .qr-canvas { padding: 18px; border-radius: 22px; background: linear-gradient(145deg, rgba(255,255,255,.07), rgba(255,35,60,.035)); border-color: rgba(255,70,90,.16); box-shadow: 0 0 35px rgba(255,30,50,.08), inset 0 1px 0 rgba(255,255,255,.08); }
+
+    .mobile-nav {
+      border-color: rgba(255,70,90,.18) !important;
+      background: linear-gradient(135deg, rgba(16,8,12,.86), rgba(7,7,10,.78)) !important;
+      box-shadow: 0 20px 60px rgba(0,0,0,.42), 0 0 34px rgba(255,30,50,.055), inset 0 1px 0 rgba(255,255,255,.07);
+      backdrop-filter: blur(26px) saturate(150%);
+      -webkit-backdrop-filter: blur(26px) saturate(150%);
+    }
+    html[data-theme="light"] .mobile-nav { background: linear-gradient(135deg, rgba(255,255,255,.88), rgba(255,245,247,.76)) !important; box-shadow: 0 20px 60px rgba(100,15,25,.12), inset 0 1px 0 rgba(255,255,255,.98); }
+    .mobile-nav .nav-tab { border-radius: 16px; }
+    body[data-view="account"] .mobile-nav .nav-tab[data-view="account"],
+    body[data-view="configs"] .mobile-nav .nav-tab[data-view="configs"],
+    body[data-view="apps"] .mobile-nav .nav-tab[data-view="apps"] { color: var(--id-red-hot); background: rgba(255,35,60,.075); box-shadow: inset 0 0 0 1px rgba(255,70,90,.12), 0 0 22px rgba(255,30,50,.05); }
+
+    @media (max-width: 900px) {
+      .profile { padding: 21px; border-radius: 25px; }
+      .hero-layout { grid-template-columns: 1fr; gap: 8px; }
+      .hero-expiry-wrap { justify-content: start; margin-top: 4px; }
+      .expiry-card { width: 100%; min-height: 0; display: grid; grid-template-columns: 1fr auto; grid-template-areas: "head donut" "meta donut"; align-items: center; }
+      .expiry-head { grid-area: head; }
+      .donut-wrap { grid-area: donut; }
+      .expiry-meta { grid-area: meta; align-self: end; }
+      .donut { width: 154px; height: 154px; }
+      .metrics { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .detail-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .hero-wave { bottom: 118px; }
+    }
+
+    @media (max-width: 560px) {
+      body { padding-left: 12px; padding-right: 12px; }
+      .topbar { top: 8px; min-height: 66px; border-radius: 20px; }
+      .brand-logo { width: 42px; height: 42px; border-radius: 14px; }
+      .brand-title { font-size: 15px; }
+      .brand-sub { font-size: 11px; }
+      .profile, .usage, #view-configs > .panel, #view-apps > .panel { border-radius: 23px; }
+      .hero-heading { margin-top: 22px; }
+      .username { font-size: clamp(29px, 9vw, 42px); }
+      .hero-action { flex: 1 1 160px; }
+      .expiry-card { grid-template-columns: minmax(0,1fr) 132px; padding: 15px; }
+      .donut { width: 132px; height: 132px; }
+      .donut::before { inset: 9px; }
+      .donut-center strong { font-size: 29px; }
+      .metrics { gap: 8px; }
+      .metrics .metric { min-height: 92px; padding: 12px; }
+      .metrics .v { font-size: 16px; }
+      .detail-grid { gap: 8px; }
+      .detail-grid .detail { padding: 11px; }
+      .usage { padding: 17px; }
+      .usage-head { align-items: stretch; flex-direction: column; gap: 12px; }
+      .range { align-self: flex-start; }
+      .smooth-chart { min-height: 255px; }
+      .chart-shell-premium { padding: 5px 4px 2px; border-radius: 19px; }
+      .os-toggle { min-height: 78px; padding: 12px; gap: 11px; }
+      .os-icon { width: 44px; height: 44px; border-radius: 14px; }
+      .os-name { font-size: 15px; }
+      .os-chevron { width: 34px; height: 34px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      body::before, body::after, .hero-orb, .hero-spark { animation: none !important; }
+      .os-content, .os-chevron, .hero-action, .metrics .metric { transition: none !important; }
+    }
+
+    html[data-perf="lite"] body::after,
+    html[data-perf="lite"] .hero-orb,
+    html[data-perf="lite"] .hero-spark { animation: none !important; }
+</style>
 </head>
 <body data-view="account">
   <div class="shell">
@@ -2238,26 +2742,74 @@
     <main>
       <section class="view" id="view-account">
         <div class="account-grid">
-          <section class="panel profile glass">
-            <div class="status-line">
-              <div class="chip"><span class="dot" id="status-dot"></span><span id="status-label">—</span></div>
-              <div class="chip-row" id="profile-chips"></div>
-            </div>
-            <div>
-              <h2 class="username" id="username">—</h2>
-              <p class="subline" id="subline" data-i18n="emptyState">لینک اشتراک را وارد کنید</p>
-              <div class="profile-shortcuts hidden" id="profile-shortcuts">
-                <button class="ghost profile-shortcut" type="button" id="copy-sub-link"><span data-svg="copy"></span><span data-i18n="copySubLink">کپی لینک اشتراک</span></button>
-                <button class="ghost profile-shortcut" type="button" id="qr-sub-link"><span data-svg="qr"></span><span data-i18n="qrSubLink">QR اشتراک</span></button>
+          <section class="panel profile glass" id="profile-panel">
+            <div class="hero-orb hero-orb-a"></div>
+            <div class="hero-orb hero-orb-b"></div>
+            <div class="hero-spark spark-a"></div>
+            <div class="hero-spark spark-b"></div>
+
+            <div class="hero-layout">
+              <div class="hero-copy">
+                <div class="status-line">
+                  <div class="chip status-chip"><span class="dot" id="status-dot"></span><span id="status-label">—</span></div>
+                  <div class="chip-row" id="profile-chips"></div>
+                </div>
+                <div class="hero-heading">
+                  <span class="hero-kicker" data-i18n="heroKicker">اشتراک شخصی شما</span>
+                  <h2 class="username" id="username">—</h2>
+                  <p class="subline" id="subline" data-i18n="emptyState">لینک اشتراک را وارد کنید</p>
+                </div>
+                <div class="profile-shortcuts hidden" id="profile-shortcuts">
+                  <button class="hero-action hero-action-primary" type="button" id="copy-sub-link"><span data-svg="copy"></span><span data-i18n="copySubLink">کپی لینک اشتراک</span></button>
+                  <button class="hero-action" type="button" id="qr-sub-link"><span data-svg="qr"></span><span data-i18n="qrSubLink">QR اشتراک</span></button>
+                </div>
+              </div>
+
+              <div class="hero-expiry-wrap">
+                <section class="expiry-card glass-soft">
+                  <div class="expiry-head">
+                    <div>
+                      <span class="eyebrow" data-i18n="expiryProgress">وضعیت اشتراک</span>
+                      <h3 class="expiry-title" data-i18n="remainingDays">روزهای باقی‌مانده</h3>
+                    </div>
+                    <span class="expiry-badge" id="expiry-badge">—</span>
+                  </div>
+                  <div class="donut-wrap">
+                    <div class="donut" id="expiry-donut">
+                      <div class="donut-center">
+                        <strong id="expiry-days">—</strong>
+                        <span data-i18n="days">روز</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="expiry-meta"><span data-i18n="expiryPercent">درصد باقی‌مانده</span><strong id="expiry-percent">—</strong></div>
+                </section>
               </div>
             </div>
+
+            <div class="hero-wave" aria-hidden="true">
+              <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="heroWaveGradient" x1="0" x2="1">
+                    <stop offset="0" stop-color="#ff2743" stop-opacity="0"></stop>
+                    <stop offset=".22" stop-color="#ff2743" stop-opacity=".8"></stop>
+                    <stop offset=".55" stop-color="#ff7b89" stop-opacity=".95"></stop>
+                    <stop offset=".86" stop-color="#ff2743" stop-opacity=".75"></stop>
+                    <stop offset="1" stop-color="#ff2743" stop-opacity="0"></stop>
+                  </linearGradient>
+                </defs>
+                <path d="M0,82 C130,18 210,116 330,64 C455,10 560,104 680,55 C820,0 900,100 1030,55 C1110,28 1160,50 1200,28" fill="none" stroke="url(#heroWaveGradient)" stroke-width="2.2"></path>
+              </svg>
+            </div>
+
             <div class="metrics" id="metrics"></div>
             <div class="detail-grid" id="details"></div>
           </section>
 
           <section class="panel usage glass">
-            <div class="section-head">
+            <div class="section-head usage-head">
               <div>
+                <span class="section-kicker" data-i18n="usageKicker">تحلیل مصرف</span>
                 <h2 class="title" data-i18n="usage">نمودار مصرف</h2>
                 <p class="note" id="usage-total">—</p>
               </div>
@@ -2266,28 +2818,8 @@
                 <button class="range-btn" type="button" data-range="7d" data-i18n="week">هفته</button>
               </div>
             </div>
-            <div class="analytics-grid">
-              <article class="expiry-card glass-soft">
-                <div class="expiry-head">
-                  <div>
-                    <span class="eyebrow" data-i18n="expiryProgress">وضعیت اشتراک</span>
-                    <h3 class="expiry-title" data-i18n="remainingDays">روزهای باقی‌مانده</h3>
-                  </div>
-                  <span class="expiry-badge" id="expiry-badge">—</span>
-                </div>
-                <div class="donut-wrap">
-                  <div class="donut" id="expiry-donut">
-                    <div class="donut-center">
-                      <strong id="expiry-days">—</strong>
-                      <span data-i18n="days">روز</span>
-                    </div>
-                  </div>
-                </div>
-                <div class="expiry-meta"><span data-i18n="expiryPercent">درصد باقی‌مانده</span><strong id="expiry-percent">—</strong></div>
-              </article>
-              <div class="chart-shell">
-                <div class="chart" id="chart"><div class="empty" data-i18n="noUsage">آماری برای نمایش نیست</div></div>
-              </div>
+            <div class="chart-shell chart-shell-premium">
+              <div class="chart" id="chart"><div class="empty" data-i18n="noUsage">آماری برای نمایش نیست</div></div>
             </div>
           </section>
         </div>
@@ -2358,22 +2890,6 @@
 (function () {
   "use strict";
 
-  var LS = {
-    panel: "pg_user_panel",
-    token: "pg_user_token",
-    lang: "pg_user_lang",
-    theme: "pg_user_theme"
-  };
-
-  var IDONT_SUBSCRIPTION_DEFAULT_BRAND = {
-    name: "idont-subscription",       // 
-    subtitle: {
-      fa: "پنل اشتراک",             // 
-      en: "Subscription panel"      // 
-    },
-    logoUrl: ""                     // 
-  };
-
   var BRAND = window.IDONT_SUBSCRIPTION_BRAND || window.PASARGUARD_BRAND || window.PANEL_BRAND || IDONT_SUBSCRIPTION_DEFAULT_BRAND;
 
   var CONFIG = window.PASARGUARD_CONFIG || window.PANEL_USER_CONFIG || {};
@@ -2400,6 +2916,8 @@
   var L = {
     fa: {
       account: "اطلاعات حساب",
+      heroKicker: "اشتراک شخصی شما",
+      usageKicker: "تحلیل هوشمند مصرف",
       configs: "کانفیگ‌ها",
       apps: "اپلیکیشن‌ها",
       configTag: "کانفیگ",
@@ -2475,6 +2993,8 @@
     },
     en: {
       account: "Account",
+      heroKicker: "Your personal subscription",
+      usageKicker: "Smart usage analytics",
       configs: "Configs",
       apps: "Apps",
       configTag: "Config",
@@ -2559,6 +3079,7 @@
     copy: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="9" width="13" height="13" rx="3"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>',
     support: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.4 19.4 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.9a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.1-.5c.9.3 1.9.6 2.9.7a2 2 0 0 1 1.7 2Z"></path></svg>',
     qr: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h2v2h-2zM18 14h2v2h-2zM14 18h2v2h-2zM18 18h2v2h-2z"></path></svg>',
+    chevron: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 9 5 5 5-5"></path></svg>',
     download: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v12"></path><path d="M7 10l5 5 5-5"></path><path d="M5 21h14"></path></svg>',
     link: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>',
     close: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"></path></svg>',
@@ -3140,7 +3661,7 @@
     $("username").textContent = username;
     $("subline").textContent = has ? "" : tr("emptyState");
     $("profile-shortcuts").classList.toggle("hidden", !(state.ctx && state.ctx.subUrl));
-    document.title = has && username !== "—" ? username : (fa() ? "پنل کاربری" : "User Panel");
+    document.title = has && username !== "—" ? username : "idont-subscription";
 
     $("profile-chips").innerHTML = [
       chip(num(state.links.length) + " " + tr("configTag")),
@@ -3448,7 +3969,7 @@
       return '<text class="axis-label" x="' + p.x + '" y="' + (height - 18) + '" text-anchor="middle">' + esc(tick(p.time, range, index, coords.length)) + '</text>';
     }).join("");
     var dots = coords.map(function (p) {
-      return '<circle class="point" cx="' + p.x + '" cy="' + p.y + '" r="4"><title>' + esc(bytes(p.value)) + '</title></circle>';
+      return '<circle class="point" cx="' + p.x + '" cy="' + p.y + '" r="2.25"><title>' + esc(bytes(p.value)) + '</title></circle>';
     }).join("");
 
     $("chart").innerHTML = '<svg class="smooth-chart" viewBox="0 0 ' + width + ' ' + height + '" preserveAspectRatio="none" role="img" aria-label="' + esc(tr("usage")) + '">' +
@@ -3586,7 +4107,14 @@
     loadQrLib().then(function () {
       $("qr-canvas").innerHTML = "";
       try {
-        new QRCode($("qr-canvas"), { text: text, width: 208, height: 208, colorDark: "#111827", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.M });
+        new QRCode($("qr-canvas"), {
+          text: text,
+          width: 208,
+          height: 208,
+          colorDark: state.theme === "dark" ? "#8f1025" : "#a70f28",
+          colorLight: "#ffffff",
+          correctLevel: QRCode.CorrectLevel.M
+        });
       } catch (e) {
         closeModal("qr-modal");
         toast(tr("qrLong"));
@@ -3765,12 +4293,7 @@
         if (conf) downloadText(conf, wireguardFileName(payload, title));
       }
     });
-    $("os-grid").addEventListener("click", function (event) {
-      var btn = event.target.closest(".os-open");
-      if (!btn) return;
-      var card = btn.closest(".os-card");
-      if (card) openApps(card.getAttribute("data-platform"));
-    });
+
     $("theme-btn").addEventListener("click", function () {
       state.theme = state.theme === "dark" ? "light" : "dark";
       localStorage.setItem(LS.theme, state.theme);
