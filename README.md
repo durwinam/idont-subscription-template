@@ -1,7 +1,7 @@
 <h1 align="center">idont-subscription</h1>
 
 <p align="center">
-  نسخهٔ پایدار 1.2.0 — داشبورد اشتراک مدرن و Glass با APIهای اصلی Pasarguard
+  نسخهٔ پایدار 1.2.3 — داشبورد اشتراک مدرن و Glass با APIهای اصلی Pasarguard
 </p>
 
 <p align="center">
@@ -25,7 +25,7 @@
 - نمودار دایره‌ای واقعی برای روزهای باقی‌مانده
 - QR اشتراک و QR کانفیگ با همان لینک‌های واقعی Subscription
 - کپی لینک، کانفیگ‌ها، اطلاعات اتصال و اپلیکیشن‌ها
-- بخش اپلیکیشن‌ها به‌صورت Accordion بر اساس سیستم‌عامل
+- بخش اپلیکیشن‌ها با فیلتر سیستم‌عامل، کارت‌های Glass و چیدمان واکنش‌گرا
 - رابط واکنش‌گرا برای موبایل، Telegram WebView، تبلت و دسکتاپ
 - یک فایل HTML — بدون Node.js و build
 
@@ -186,3 +186,11 @@ var IDONT_SUBSCRIPTION_DEFAULT_BRAND = {
 
 - [idont-subscription](https://github.com/durwinam/idont-subscription-template) — سبک‌تر و سریع‌تر
 - [idont-subscription](https://github.com/durwinam/idont-subscription-template) — نسخهٔ استاندارد
+
+## v1.2.3
+
+- بازطراحی کامل فقط بخش اپلیکیشن‌ها
+- فیلتر سریع iOS، Android، Windows، Linux و سایر سیستم‌عامل‌های موجود در API
+- کارت‌های اپلیکیشن با آیکن، توضیح، وضعیت پیشنهادی و دکمه‌های واقعی دانلود/افزودن اشتراک
+- حفظ کامل داده‌ها و لینک‌های API فعلی اپلیکیشن‌ها
+- بهبود نمایش موبایل و حذف چیدمان Accordion قدیمی که باعث فضای خالی و هم‌پوشانی می‌شد

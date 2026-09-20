@@ -1840,6 +1840,473 @@
       }
     }
 
+
+    /* v1.2.3 — Applications view redesign. Scoped to #view-apps only. */
+    #view-apps .apps-panel {
+      position: relative;
+      overflow: hidden;
+      padding: 18px;
+      border-color: rgba(255, 70, 90, 0.16);
+      background:
+        radial-gradient(80% 70% at 100% 0%, rgba(255, 35, 60, 0.10), transparent 62%),
+        radial-gradient(65% 55% at 0% 100%, rgba(255, 0, 70, 0.055), transparent 68%),
+        linear-gradient(145deg, rgba(255,255,255,.035), rgba(255,20,45,.018));
+    }
+
+    #view-apps .apps-panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(115deg, transparent 0%, rgba(255,255,255,.035) 42%, transparent 56%);
+      transform: translateX(-110%);
+      animation: apps-glass-sweep 9s ease-in-out infinite;
+    }
+
+    @keyframes apps-glass-sweep {
+      0%, 62%, 100% { transform: translateX(-110%); opacity: 0; }
+      68% { opacity: .7; }
+      82% { transform: translateX(110%); opacity: 0; }
+    }
+
+    #view-apps .apps-hero,
+    #view-apps .apps-filter-wrap,
+    #view-apps .apps-results-head,
+    #view-apps .apps-list-grid {
+      position: relative;
+      z-index: 1;
+    }
+
+    #view-apps .apps-hero {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 4px 2px 18px;
+    }
+
+    #view-apps .apps-hero-copy {
+      min-width: 0;
+    }
+
+    #view-apps .apps-kicker {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--id-red-hot);
+      font-size: 12px;
+      font-weight: 750;
+      letter-spacing: .02em;
+    }
+
+    #view-apps .apps-hero .title {
+      margin: 0;
+      font-size: clamp(22px, 4vw, 30px);
+      letter-spacing: -.055em;
+    }
+
+    #view-apps .apps-hero .note {
+      margin-top: 5px;
+    }
+
+    #view-apps .apps-hero-icon {
+      width: 58px;
+      height: 58px;
+      flex: 0 0 58px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(255,70,90,.28);
+      border-radius: 19px;
+      color: var(--id-red-hot);
+      background:
+        radial-gradient(circle at 50% 35%, rgba(255,55,80,.22), transparent 58%),
+        rgba(255,25,45,.055);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.08),
+        0 0 30px rgba(255,30,50,.10);
+    }
+
+    #view-apps .apps-hero-icon svg {
+      width: 28px;
+      height: 28px;
+    }
+
+    #view-apps .apps-filter-wrap {
+      overflow: hidden;
+      margin: 0 -2px 16px;
+      border: 1px solid rgba(255,70,90,.13);
+      border-radius: 18px;
+      background: rgba(0,0,0,.12);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.035);
+    }
+
+    #view-apps .apps-filters {
+      display: flex;
+      gap: 7px;
+      padding: 7px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    #view-apps .apps-filters::-webkit-scrollbar {
+      display: none;
+    }
+
+    #view-apps .apps-filter {
+      min-height: 44px;
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 0 15px;
+      border: 1px solid transparent;
+      border-radius: 13px;
+      color: var(--muted);
+      background: transparent;
+      font: inherit;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: transform .18s ease, color .18s ease, border-color .18s ease, background .18s ease, box-shadow .18s ease;
+    }
+
+    #view-apps .apps-filter svg {
+      width: 20px;
+      height: 20px;
+      flex: 0 0 20px;
+    }
+
+    #view-apps .apps-filter:hover {
+      color: var(--ink);
+      background: rgba(255,35,60,.045);
+    }
+
+    #view-apps .apps-filter.active {
+      color: #fff;
+      border-color: rgba(255,90,105,.42);
+      background: linear-gradient(135deg, rgba(255,35,60,.88), rgba(174,8,35,.74));
+      box-shadow:
+        0 8px 24px rgba(255,30,50,.16),
+        inset 0 1px 0 rgba(255,255,255,.14);
+      transform: translateY(-1px);
+    }
+
+    #view-apps .filter-count { opacity: .58; font-size: 10px; font-variant-numeric: tabular-nums; }
+
+    #view-apps .apps-filter.active .filter-count { opacity: .85; }
+
+    #view-apps .apps-filter.active svg {
+      filter: drop-shadow(0 0 5px rgba(255,110,125,.55));
+    }
+
+    #view-apps .apps-results-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 2px 2px 12px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    #view-apps .apps-results-head > div {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 7px;
+      min-width: 0;
+    }
+
+    #view-apps .apps-results-head strong {
+      color: var(--ink);
+      font-size: 14px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    #view-apps .apps-results-line {
+      height: 1px;
+      flex: 1;
+      background: linear-gradient(90deg, rgba(255,70,90,.25), transparent);
+    }
+
+    #view-apps .apps-list-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 13px;
+    }
+
+    #view-apps .apps-list-grid .empty {
+      grid-column: 1 / -1;
+    }
+
+    #view-apps .app-card {
+      position: relative;
+      min-width: 0;
+      min-height: 0;
+      max-width: none;
+      width: 100%;
+      margin: 0;
+      padding: 16px;
+      overflow: hidden;
+      border: 1px solid rgba(255,70,90,.16) !important;
+      border-radius: 21px;
+      background:
+        radial-gradient(90% 90% at 100% 0%, rgba(255,35,60,.075), transparent 58%),
+        linear-gradient(145deg, rgba(255,255,255,.045), rgba(255,20,45,.024)) !important;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.055),
+        0 15px 38px rgba(0,0,0,.14);
+      transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+    }
+
+    #view-apps .app-card::after {
+      content: "";
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      inset-inline-end: -58px;
+      top: -66px;
+      border-radius: 50%;
+      background: rgba(255,30,55,.16);
+      filter: blur(35px);
+      pointer-events: none;
+    }
+
+    #view-apps .app-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(255,80,100,.32) !important;
+      box-shadow:
+        0 22px 48px rgba(0,0,0,.22),
+        0 0 30px rgba(255,30,50,.075),
+        inset 0 1px 0 rgba(255,255,255,.08);
+    }
+
+    #view-apps .app-head {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: minmax(0,1fr) 58px;
+      gap: 13px;
+      align-items: start;
+      margin: 0 0 15px;
+    }
+
+    #view-apps .app-info {
+      min-width: 0;
+      order: 1;
+    }
+
+    #view-apps .app-icon {
+      order: 2;
+      width: 58px;
+      height: 58px;
+      border-radius: 17px;
+      border: 1px solid rgba(255,90,105,.20);
+      background: rgba(5,6,12,.55);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.07),
+        0 0 22px rgba(255,30,50,.07);
+    }
+
+    #view-apps .app-icon img {
+      border-radius: 16px;
+    }
+
+    #view-apps .app-name {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 7px;
+      line-height: 1.35;
+    }
+
+    #view-apps .app-name-text {
+      flex: 0 1 auto;
+      max-width: 100%;
+      color: var(--ink);
+      font-size: 17px;
+      font-weight: 820;
+      letter-spacing: -.045em;
+    }
+
+    #view-apps .app-platform {
+      margin-top: 4px;
+      color: var(--faint);
+      font-size: 10px;
+      font-weight: 650;
+    }
+
+    #view-apps .app-desc {
+      margin-top: 8px;
+      min-height: 3.1em;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    #view-apps .badge.rec {
+      min-height: 25px;
+      padding-inline: 9px;
+      color: var(--warn);
+      border-color: rgba(244,200,108,.38);
+      background: rgba(244,200,108,.075);
+    }
+
+    #view-apps .app-actions {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 8px;
+      margin-top: auto;
+    }
+
+    #view-apps .app-actions a {
+      min-width: 0;
+      min-height: 42px;
+      height: 42px;
+      flex: none;
+      padding: 0 11px;
+      border-radius: 13px;
+      border: 1px solid rgba(255,70,90,.22) !important;
+      font-size: 12px;
+      font-weight: 750;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      transition: transform .18s ease, background .18s ease, box-shadow .18s ease;
+    }
+
+    #view-apps .app-actions a:hover {
+      transform: translateY(-1px);
+    }
+
+    #view-apps .app-actions .action-download {
+      color: #fff !important;
+      background: linear-gradient(135deg, rgba(255,35,60,.88), rgba(183,10,37,.82)) !important;
+      border-color: rgba(255,100,115,.34) !important;
+      box-shadow: 0 8px 22px rgba(255,30,50,.12);
+    }
+
+    #view-apps .app-actions .action-import {
+      color: var(--id-red-hot) !important;
+      background: rgba(255,35,60,.045) !important;
+    }
+
+    #view-apps .app-actions .action-exit {
+      color: var(--warn) !important;
+      background: rgba(244,200,108,.055) !important;
+      border-color: rgba(244,200,108,.22) !important;
+    }
+
+    #view-apps .app-actions a svg { width: 16px; height: 16px; flex: 0 0 16px; margin-inline-end: 6px; }
+
+    #view-apps .app-action-icon {
+      width: 16px;
+      height: 16px;
+      margin-inline-end: 5px;
+      vertical-align: -3px;
+    }
+
+    html[data-theme="light"] #view-apps .apps-panel {
+      border-color: rgba(168,40,55,.14);
+      background:
+        radial-gradient(80% 70% at 100% 0%, rgba(220,30,50,.09), transparent 62%),
+        radial-gradient(65% 55% at 0% 100%, rgba(255,70,90,.045), transparent 68%),
+        linear-gradient(145deg, rgba(255,255,255,.94), rgba(255,245,246,.86));
+    }
+
+    html[data-theme="light"] #view-apps .apps-filter-wrap {
+      background: rgba(255,255,255,.62);
+    }
+
+    html[data-theme="light"] #view-apps .apps-filter.active {
+      color: #fff;
+      background: linear-gradient(135deg, #f02b46, #c91032);
+    }
+
+    html[data-theme="light"] #view-apps .app-card {
+      background:
+        radial-gradient(90% 90% at 100% 0%, rgba(220,30,50,.06), transparent 58%),
+        linear-gradient(145deg, rgba(255,255,255,.92), rgba(255,245,246,.88)) !important;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.9),
+        0 15px 35px rgba(100,20,30,.08);
+    }
+
+    html[data-theme="light"] #view-apps .app-icon {
+      background: rgba(255,255,255,.78);
+    }
+
+    @media (max-width: 760px) {
+      #view-apps .apps-panel {
+        padding: 14px;
+        border-radius: 22px;
+      }
+
+      #view-apps .apps-hero {
+        padding-bottom: 14px;
+      }
+
+      #view-apps .apps-hero-icon {
+        width: 50px;
+        height: 50px;
+        flex-basis: 50px;
+        border-radius: 16px;
+      }
+
+      #view-apps .apps-hero .title {
+        font-size: 23px;
+      }
+
+      #view-apps .apps-list-grid {
+        grid-template-columns: 1fr;
+        gap: 11px;
+      }
+
+      #view-apps .app-card {
+        padding: 15px;
+        border-radius: 19px;
+      }
+
+      #view-apps .app-head {
+        grid-template-columns: minmax(0,1fr) 54px;
+        gap: 11px;
+      }
+
+      #view-apps .app-icon {
+        width: 54px;
+        height: 54px;
+      }
+
+      #view-apps .app-name-text {
+        font-size: 16px;
+      }
+
+      #view-apps .app-desc {
+        min-height: 0;
+        margin-top: 7px;
+      }
+
+      #view-apps .app-actions a {
+        min-height: 44px;
+        height: 44px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #view-apps .apps-panel::before {
+        animation: none;
+      }
+
+      #view-apps .app-card,
+      #view-apps .apps-filter {
+        transition: none;
+      }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       *,
       *::before,
@@ -2704,6 +3171,473 @@
       .os-chevron { width: 34px; height: 34px; }
     }
 
+
+    /* v1.2.3 — Applications view redesign. Scoped to #view-apps only. */
+    #view-apps .apps-panel {
+      position: relative;
+      overflow: hidden;
+      padding: 18px;
+      border-color: rgba(255, 70, 90, 0.16);
+      background:
+        radial-gradient(80% 70% at 100% 0%, rgba(255, 35, 60, 0.10), transparent 62%),
+        radial-gradient(65% 55% at 0% 100%, rgba(255, 0, 70, 0.055), transparent 68%),
+        linear-gradient(145deg, rgba(255,255,255,.035), rgba(255,20,45,.018));
+    }
+
+    #view-apps .apps-panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(115deg, transparent 0%, rgba(255,255,255,.035) 42%, transparent 56%);
+      transform: translateX(-110%);
+      animation: apps-glass-sweep 9s ease-in-out infinite;
+    }
+
+    @keyframes apps-glass-sweep {
+      0%, 62%, 100% { transform: translateX(-110%); opacity: 0; }
+      68% { opacity: .7; }
+      82% { transform: translateX(110%); opacity: 0; }
+    }
+
+    #view-apps .apps-hero,
+    #view-apps .apps-filter-wrap,
+    #view-apps .apps-results-head,
+    #view-apps .apps-list-grid {
+      position: relative;
+      z-index: 1;
+    }
+
+    #view-apps .apps-hero {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 4px 2px 18px;
+    }
+
+    #view-apps .apps-hero-copy {
+      min-width: 0;
+    }
+
+    #view-apps .apps-kicker {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--id-red-hot);
+      font-size: 12px;
+      font-weight: 750;
+      letter-spacing: .02em;
+    }
+
+    #view-apps .apps-hero .title {
+      margin: 0;
+      font-size: clamp(22px, 4vw, 30px);
+      letter-spacing: -.055em;
+    }
+
+    #view-apps .apps-hero .note {
+      margin-top: 5px;
+    }
+
+    #view-apps .apps-hero-icon {
+      width: 58px;
+      height: 58px;
+      flex: 0 0 58px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(255,70,90,.28);
+      border-radius: 19px;
+      color: var(--id-red-hot);
+      background:
+        radial-gradient(circle at 50% 35%, rgba(255,55,80,.22), transparent 58%),
+        rgba(255,25,45,.055);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.08),
+        0 0 30px rgba(255,30,50,.10);
+    }
+
+    #view-apps .apps-hero-icon svg {
+      width: 28px;
+      height: 28px;
+    }
+
+    #view-apps .apps-filter-wrap {
+      overflow: hidden;
+      margin: 0 -2px 16px;
+      border: 1px solid rgba(255,70,90,.13);
+      border-radius: 18px;
+      background: rgba(0,0,0,.12);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.035);
+    }
+
+    #view-apps .apps-filters {
+      display: flex;
+      gap: 7px;
+      padding: 7px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    #view-apps .apps-filters::-webkit-scrollbar {
+      display: none;
+    }
+
+    #view-apps .apps-filter {
+      min-height: 44px;
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 0 15px;
+      border: 1px solid transparent;
+      border-radius: 13px;
+      color: var(--muted);
+      background: transparent;
+      font: inherit;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: transform .18s ease, color .18s ease, border-color .18s ease, background .18s ease, box-shadow .18s ease;
+    }
+
+    #view-apps .apps-filter svg {
+      width: 20px;
+      height: 20px;
+      flex: 0 0 20px;
+    }
+
+    #view-apps .apps-filter:hover {
+      color: var(--ink);
+      background: rgba(255,35,60,.045);
+    }
+
+    #view-apps .apps-filter.active {
+      color: #fff;
+      border-color: rgba(255,90,105,.42);
+      background: linear-gradient(135deg, rgba(255,35,60,.88), rgba(174,8,35,.74));
+      box-shadow:
+        0 8px 24px rgba(255,30,50,.16),
+        inset 0 1px 0 rgba(255,255,255,.14);
+      transform: translateY(-1px);
+    }
+
+    #view-apps .filter-count { opacity: .58; font-size: 10px; font-variant-numeric: tabular-nums; }
+
+    #view-apps .apps-filter.active .filter-count { opacity: .85; }
+
+    #view-apps .apps-filter.active svg {
+      filter: drop-shadow(0 0 5px rgba(255,110,125,.55));
+    }
+
+    #view-apps .apps-results-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 2px 2px 12px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    #view-apps .apps-results-head > div {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 7px;
+      min-width: 0;
+    }
+
+    #view-apps .apps-results-head strong {
+      color: var(--ink);
+      font-size: 14px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    #view-apps .apps-results-line {
+      height: 1px;
+      flex: 1;
+      background: linear-gradient(90deg, rgba(255,70,90,.25), transparent);
+    }
+
+    #view-apps .apps-list-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 13px;
+    }
+
+    #view-apps .apps-list-grid .empty {
+      grid-column: 1 / -1;
+    }
+
+    #view-apps .app-card {
+      position: relative;
+      min-width: 0;
+      min-height: 0;
+      max-width: none;
+      width: 100%;
+      margin: 0;
+      padding: 16px;
+      overflow: hidden;
+      border: 1px solid rgba(255,70,90,.16) !important;
+      border-radius: 21px;
+      background:
+        radial-gradient(90% 90% at 100% 0%, rgba(255,35,60,.075), transparent 58%),
+        linear-gradient(145deg, rgba(255,255,255,.045), rgba(255,20,45,.024)) !important;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.055),
+        0 15px 38px rgba(0,0,0,.14);
+      transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+    }
+
+    #view-apps .app-card::after {
+      content: "";
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      inset-inline-end: -58px;
+      top: -66px;
+      border-radius: 50%;
+      background: rgba(255,30,55,.16);
+      filter: blur(35px);
+      pointer-events: none;
+    }
+
+    #view-apps .app-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(255,80,100,.32) !important;
+      box-shadow:
+        0 22px 48px rgba(0,0,0,.22),
+        0 0 30px rgba(255,30,50,.075),
+        inset 0 1px 0 rgba(255,255,255,.08);
+    }
+
+    #view-apps .app-head {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: minmax(0,1fr) 58px;
+      gap: 13px;
+      align-items: start;
+      margin: 0 0 15px;
+    }
+
+    #view-apps .app-info {
+      min-width: 0;
+      order: 1;
+    }
+
+    #view-apps .app-icon {
+      order: 2;
+      width: 58px;
+      height: 58px;
+      border-radius: 17px;
+      border: 1px solid rgba(255,90,105,.20);
+      background: rgba(5,6,12,.55);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.07),
+        0 0 22px rgba(255,30,50,.07);
+    }
+
+    #view-apps .app-icon img {
+      border-radius: 16px;
+    }
+
+    #view-apps .app-name {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 7px;
+      line-height: 1.35;
+    }
+
+    #view-apps .app-name-text {
+      flex: 0 1 auto;
+      max-width: 100%;
+      color: var(--ink);
+      font-size: 17px;
+      font-weight: 820;
+      letter-spacing: -.045em;
+    }
+
+    #view-apps .app-platform {
+      margin-top: 4px;
+      color: var(--faint);
+      font-size: 10px;
+      font-weight: 650;
+    }
+
+    #view-apps .app-desc {
+      margin-top: 8px;
+      min-height: 3.1em;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    #view-apps .badge.rec {
+      min-height: 25px;
+      padding-inline: 9px;
+      color: var(--warn);
+      border-color: rgba(244,200,108,.38);
+      background: rgba(244,200,108,.075);
+    }
+
+    #view-apps .app-actions {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 8px;
+      margin-top: auto;
+    }
+
+    #view-apps .app-actions a {
+      min-width: 0;
+      min-height: 42px;
+      height: 42px;
+      flex: none;
+      padding: 0 11px;
+      border-radius: 13px;
+      border: 1px solid rgba(255,70,90,.22) !important;
+      font-size: 12px;
+      font-weight: 750;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      transition: transform .18s ease, background .18s ease, box-shadow .18s ease;
+    }
+
+    #view-apps .app-actions a:hover {
+      transform: translateY(-1px);
+    }
+
+    #view-apps .app-actions .action-download {
+      color: #fff !important;
+      background: linear-gradient(135deg, rgba(255,35,60,.88), rgba(183,10,37,.82)) !important;
+      border-color: rgba(255,100,115,.34) !important;
+      box-shadow: 0 8px 22px rgba(255,30,50,.12);
+    }
+
+    #view-apps .app-actions .action-import {
+      color: var(--id-red-hot) !important;
+      background: rgba(255,35,60,.045) !important;
+    }
+
+    #view-apps .app-actions .action-exit {
+      color: var(--warn) !important;
+      background: rgba(244,200,108,.055) !important;
+      border-color: rgba(244,200,108,.22) !important;
+    }
+
+    #view-apps .app-actions a svg { width: 16px; height: 16px; flex: 0 0 16px; margin-inline-end: 6px; }
+
+    #view-apps .app-action-icon {
+      width: 16px;
+      height: 16px;
+      margin-inline-end: 5px;
+      vertical-align: -3px;
+    }
+
+    html[data-theme="light"] #view-apps .apps-panel {
+      border-color: rgba(168,40,55,.14);
+      background:
+        radial-gradient(80% 70% at 100% 0%, rgba(220,30,50,.09), transparent 62%),
+        radial-gradient(65% 55% at 0% 100%, rgba(255,70,90,.045), transparent 68%),
+        linear-gradient(145deg, rgba(255,255,255,.94), rgba(255,245,246,.86));
+    }
+
+    html[data-theme="light"] #view-apps .apps-filter-wrap {
+      background: rgba(255,255,255,.62);
+    }
+
+    html[data-theme="light"] #view-apps .apps-filter.active {
+      color: #fff;
+      background: linear-gradient(135deg, #f02b46, #c91032);
+    }
+
+    html[data-theme="light"] #view-apps .app-card {
+      background:
+        radial-gradient(90% 90% at 100% 0%, rgba(220,30,50,.06), transparent 58%),
+        linear-gradient(145deg, rgba(255,255,255,.92), rgba(255,245,246,.88)) !important;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.9),
+        0 15px 35px rgba(100,20,30,.08);
+    }
+
+    html[data-theme="light"] #view-apps .app-icon {
+      background: rgba(255,255,255,.78);
+    }
+
+    @media (max-width: 760px) {
+      #view-apps .apps-panel {
+        padding: 14px;
+        border-radius: 22px;
+      }
+
+      #view-apps .apps-hero {
+        padding-bottom: 14px;
+      }
+
+      #view-apps .apps-hero-icon {
+        width: 50px;
+        height: 50px;
+        flex-basis: 50px;
+        border-radius: 16px;
+      }
+
+      #view-apps .apps-hero .title {
+        font-size: 23px;
+      }
+
+      #view-apps .apps-list-grid {
+        grid-template-columns: 1fr;
+        gap: 11px;
+      }
+
+      #view-apps .app-card {
+        padding: 15px;
+        border-radius: 19px;
+      }
+
+      #view-apps .app-head {
+        grid-template-columns: minmax(0,1fr) 54px;
+        gap: 11px;
+      }
+
+      #view-apps .app-icon {
+        width: 54px;
+        height: 54px;
+      }
+
+      #view-apps .app-name-text {
+        font-size: 16px;
+      }
+
+      #view-apps .app-desc {
+        min-height: 0;
+        margin-top: 7px;
+      }
+
+      #view-apps .app-actions a {
+        min-height: 44px;
+        height: 44px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #view-apps .apps-panel::before {
+        animation: none;
+      }
+
+      #view-apps .app-card,
+      #view-apps .apps-filter {
+        transition: none;
+      }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       body::before, body::after, .hero-orb, .hero-spark { animation: none !important; }
       .os-content, .os-chevron, .hero-action, .metrics .metric { transition: none !important; }
@@ -2847,14 +3781,26 @@
       </section>
 
       <section class="view" id="view-apps">
-        <section class="panel glass">
-          <div class="section-head">
-            <div>
+        <section class="panel glass apps-panel">
+          <div class="apps-hero">
+            <div class="apps-hero-copy">
+              <span class="apps-kicker" data-i18n="apps">اپلیکیشن‌ها</span>
               <h2 class="title" data-i18n="appsTitle">اپلیکیشن‌ها</h2>
               <p class="note" data-i18n="appsNote">لیست اپلیکیشن‌ها بر اساس سیستم‌عامل</p>
             </div>
+            <div class="apps-hero-icon" aria-hidden="true"><span data-svg="apps"></span></div>
           </div>
-          <div class="os-grid" id="os-grid"></div>
+          <div class="apps-filter-wrap">
+            <div class="apps-filters" id="apps-filters" role="tablist" aria-label="Operating systems"></div>
+          </div>
+          <div class="apps-results-head">
+            <div>
+              <strong id="apps-results-title">—</strong>
+              <span id="apps-results-count">—</span>
+            </div>
+            <span class="apps-results-line" aria-hidden="true"></span>
+          </div>
+          <div class="apps-list-grid" id="os-grid"></div>
         </section>
       </section>
     </main>
@@ -2938,6 +3884,7 @@
     range: "1d",
     groups: {},
     appsModalPlatform: null,
+    appFilter: null,
     toastTimer: null,
     viewAnimTimer: null,
     usageRequest: 0,
@@ -3906,11 +4853,6 @@
   }
 
   function renderApps() {
-    if (!state.apps.length) {
-      $("os-grid").innerHTML = '<div class="empty">' + esc(tr("noApps")) + '</div>';
-      return;
-    }
-
     var groups = {};
     state.apps.forEach(function (app) {
       var key = canonical(app.platform);
@@ -3919,26 +4861,47 @@
     });
     state.groups = groups;
 
-    var current = currentOS();
-    var order = ["ios", "android", "windows", "macos", "linux", "appletv", "androidtv", "web", "other"];
-    if (groups[current]) order = [current].concat(order.filter(function (x) { return x !== current; }));
-    var keys = order.filter(function (key) { return groups[key] && groups[key].length; });
-    Object.keys(groups).sort().forEach(function (key) { if (keys.indexOf(key) < 0) keys.push(key); });
+    if (!state.apps.length) {
+      $("apps-filters").innerHTML = "";
+      $("apps-results-title").textContent = tr("appsTitle");
+      $("apps-results-count").textContent = "";
+      $("os-grid").innerHTML = '<div class="empty">' + esc(tr("noApps")) + '</div>';
+      return;
+    }
 
-    $("os-grid").innerHTML = keys.map(function (key, index) {
-      var list = groups[key];
-      var open = key === current || index === 0;
-      return '<article class="os-card ' + (key === current ? "current " : "") + (open ? "open" : "") + '" data-platform="' + esc(key) + '">' +
-        '<button class="os-toggle" type="button" aria-expanded="' + (open ? "true" : "false") + '" aria-controls="apps-' + esc(key) + '">' +
-        '<span class="os-icon" aria-hidden="true">' + platformIcon(key) + '</span>' +
-        '<span class="os-info"><span class="os-top"><span class="os-name">' + esc(platformLabel(key)) + '</span><span class="badge-wrap">' +
-        (key === current ? '<span class="badge current-tag">' + esc(tr("yourOS")) + '</span>' : '') +
-        '</span><span class="os-count">' + num(list.length) + ' ' + esc(tr("app")) + '</span></span>' +
-        '<span class="os-chevron" aria-hidden="true">' + svg("chevron") + '</span>' +
-        '</button>' +
-        '<div class="os-content" id="apps-' + esc(key) + '"><div class="inline-app-list">' + list.map(appHtml).join("") + '</div></div>' +
-        '</article>';
+    var preferred = ["ios", "android", "windows", "linux", "macos", "appletv", "androidtv", "web", "other"];
+    var keys = preferred.filter(function (key) {
+      return groups[key] && groups[key].length;
+    });
+    Object.keys(groups).sort().forEach(function (key) {
+      if (keys.indexOf(key) < 0) keys.push(key);
+    });
+
+    var detected = currentOS();
+    if (!state.appFilter || state.appFilter !== "all" && !groups[state.appFilter]) {
+      state.appFilter = groups[detected] ? detected : "all";
+    }
+
+    var filterKeys = ["all"].concat(keys);
+    $("apps-filters").innerHTML = filterKeys.map(function (key) {
+      var active = state.appFilter === key;
+      var count = key === "all" ? state.apps.length : (groups[key] || []).length;
+      var label = key === "all" ? (fa() ? "همه" : "All") : platformLabel(key);
+      var icon = key === "all" ? svg("apps") : platformIcon(key);
+      return '<button class="apps-filter' + (active ? ' active' : '') + '" type="button" role="tab" aria-selected="' + (active ? 'true' : 'false') + '" data-app-filter="' + esc(key) + '">' +
+        icon + '<span>' + esc(label) + '</span><span class="filter-count">' + esc(num(count)) + '</span></button>';
     }).join("");
+
+    var visible = state.appFilter === "all"
+      ? keys.reduce(function (list, key) { return list.concat(groups[key] || []); }, [])
+      : (groups[state.appFilter] || []);
+
+    var title = state.appFilter === "all" ? (fa() ? "همه اپلیکیشن‌ها" : "All applications") : platformLabel(state.appFilter);
+    $("apps-results-title").textContent = title;
+    $("apps-results-count").textContent = "• " + num(visible.length) + " " + tr("app");
+    $("os-grid").innerHTML = visible.length
+      ? visible.map(appHtml).join("")
+      : '<div class="empty">' + esc(tr("noApps")) + '</div>';
   }
 
   function actionLinkClass(label) {
@@ -3959,17 +4922,39 @@
 
   function appHtml(app) {
     var desc = pickAppText(app.description);
+    var platform = canonical(app.platform);
     var iconHtml = app.icon
-      ? '<img src="' + esc(resolveUrl(app.icon)) + '" alt="" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'grid\'"><span style="display:none;width:100%;height:100%;place-items:center;">' + platformIcon(app.platform) + '</span>'
-      : platformIcon(app.platform);
+      ? '<img src="' + esc(resolveUrl(app.icon)) + '" alt="" loading="lazy" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'grid\'"><span style="display:none;width:100%;height:100%;place-items:center;">' + platformIcon(platform) + '</span>'
+      : platformIcon(platform);
+
     var links = filterAppDownloadLinks(app.download_links || []);
     var linkHtml = links.map(function (item) {
       var label = pickAppText(item.name) || (typeof item.name === "string" ? item.name : "") || tr("download");
-      return '<a class="' + esc(actionLinkClass(label)) + '" href="' + esc(resolveUrl(item.url)) + '" target="_blank" rel="noopener">' + esc(label) + '</a>';
+      return '<a class="' + esc(actionLinkClass(label)) + '" href="' + esc(resolveUrl(item.url)) + '" target="_blank" rel="noopener noreferrer">' +
+        svg("download") + '<span>' + esc(label) + '</span></a>';
     }).join("");
-    var importHtml = app.import_url ? '<a class="import action-import" href="' + esc(resolveUrl(app.import_url)) + '" target="_blank" rel="noopener">' + esc(tr("import")) + '</a>' : "";
+
+    var importHtml = app.import_url
+      ? '<a class="action-import" href="' + esc(resolveUrl(app.import_url)) + '" target="_blank" rel="noopener noreferrer">' +
+        svg("link") + '<span>' + esc(tr("import")) + '</span></a>'
+      : "";
+
     var actions = linkHtml + importHtml;
-    return '<article class="app-card"><div class="app-head"><span class="app-icon">' + iconHtml + '</span><span class="app-info"><span class="app-name"><span class="app-name-text">' + esc(pickAppText(app.name) || (typeof app.name === "string" ? app.name : "App")) + '</span>' + (app.recommended ? '<span class="badge rec">' + esc(tr("recommended")) + '</span>' : '') + '</span>' + (desc ? '<p class="app-desc">' + esc(desc) + '</p>' : '') + '</span></div>' + (actions ? '<div class="app-actions">' + actions + '</div>' : '') + '</article>';
+
+    return '<article class="app-card">' +
+      '<div class="app-head">' +
+        '<span class="app-info">' +
+          '<span class="app-name">' +
+            '<span class="app-name-text">' + esc(pickAppText(app.name) || (typeof app.name === "string" ? app.name : "App")) + '</span>' +
+            (app.recommended ? '<span class="badge rec">' + esc(tr("recommended")) + '</span>' : '') +
+          '</span>' +
+          '<span class="app-platform">' + esc(platformLabel(platform)) + '</span>' +
+          (desc ? '<p class="app-desc">' + esc(desc) + '</p>' : '') +
+        '</span>' +
+        '<span class="app-icon" aria-hidden="true">' + iconHtml + '</span>' +
+      '</div>' +
+      (actions ? '<div class="app-actions">' + actions + '</div>' : '') +
+    '</article>';
   }
 
   function normalizeUsage(data) {
@@ -4428,14 +5413,17 @@
       }
     });
 
-    $("os-grid").addEventListener("click", function (event) {
-      var toggle = event.target.closest(".os-toggle");
-      if (!toggle) return;
-      var card = toggle.closest(".os-card");
-      if (!card) return;
-      var willOpen = !card.classList.contains("open");
-      card.classList.toggle("open", willOpen);
-      toggle.setAttribute("aria-expanded", willOpen ? "true" : "false");
+    $("os-grid").addEventListener("click", function () {
+      /* App cards intentionally contain only their real API-provided links. */
+    });
+
+    $("apps-filters").addEventListener("click", function (event) {
+      var filter = event.target.closest("[data-app-filter]");
+      if (!filter) return;
+      state.appFilter = filter.getAttribute("data-app-filter") || "all";
+      renderApps();
+      var active = $("apps-filters").querySelector(".apps-filter.active");
+      if (active) active.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
     });
 
     $("theme-btn").addEventListener("click", function () {
