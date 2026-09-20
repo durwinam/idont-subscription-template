@@ -1,11 +1,7 @@
-<div align="center">
-  <img src="Preview.jpg" alt="idont-subscription Preview" width="900">
-</div>
-
 <h1 align="center">idont-subscription</h1>
 
 <p align="center">
-  نسخهٔ حرفه‌ای — داشبورد اشتراک مدرن و Glass با APIهای اصلی Pasarguard
+  نسخهٔ پایدار 1.2.0 — داشبورد اشتراک مدرن و Glass با APIهای اصلی Pasarguard
 </p>
 
 <p align="center">
@@ -34,6 +30,15 @@
 - یک فایل HTML — بدون Node.js و build
 
 ---
+
+## پایداری و امنیت
+
+- این قالب از **Subscription Token** همان URL اشتراک استفاده می‌کند و هیچ API Key مدیریتی را داخل Frontend قرار نمی‌دهد.
+- Subscription Token در `localStorage` ذخیره نمی‌شود؛ صفحه آن را از URL اشتراک دریافت می‌کند.
+- Endpointهای اطلاعات، کانفیگ، برنامه‌ها و مصرف از مسیر واقعی Subscription همان پنل خوانده می‌شوند.
+- QR Code فقط پس از درخواست کاربر ساخته می‌شود و متن QR از همان لینک واقعی Subscription/Config گرفته می‌شود.
+- قالب با ساختارهای رایج Pasarguard مانند `/sub/<token>/info` و مسیرهای سفارشی مانند `/info/<token>/info` سازگار است.
+
 
 ## نصب خودکار
 

@@ -257,6 +257,14 @@
       max-width: 100%;
     }
 
+    body {
+      overflow-x: hidden;
+    }
+
+    .view, .panel, .profile, .usage, .os-card, .app-card, .config-card {
+      min-width: 0;
+    }
+
     .shell {
       width: min(100%, var(--page));
       margin: 0 auto;
@@ -2567,7 +2575,7 @@
     html[data-theme="light"] .smooth-chart .grid-line { stroke: rgba(100,20,30,.09); }
     .smooth-chart .area { fill: url(#idontArea); opacity: .9; }
     .smooth-chart .line { stroke: var(--id-red-hot); stroke-width: 3.2; filter: drop-shadow(0 0 7px rgba(255,40,65,.55)); }
-    .smooth-chart .point { fill: var(--id-red-hot); stroke: rgba(255,255,255,.85); stroke-width: 1.1; filter: drop-shadow(0 0 5px rgba(255,40,65,.60)); }
+    .smooth-chart .point { fill: #12070a; stroke: var(--id-red-hot); stroke-width: 2.4; filter: drop-shadow(0 0 5px rgba(255,40,65,.55)); }
     .smooth-chart .axis-label { fill: var(--muted); font-size: 11px; }
 
     .range {
@@ -2668,7 +2676,7 @@
 
     @media (max-width: 560px) {
       body { padding-left: 12px; padding-right: 12px; }
-      .topbar { top: 8px; min-height: 66px; border-radius: 20px; }
+      .topbar { top: auto; min-height: 66px; border-radius: 20px; margin-bottom: 12px; }
       .brand-logo { width: 42px; height: 42px; border-radius: 14px; }
       .brand-title { font-size: 15px; }
       .brand-sub { font-size: 11px; }
@@ -2890,13 +2898,38 @@
 (function () {
   "use strict";
 
-  var BRAND = window.IDONT_SUBSCRIPTION_BRAND || window.PASARGUARD_BRAND || window.PANEL_BRAND || IDONT_SUBSCRIPTION_DEFAULT_BRAND;
+  var LS = {
+    lang: "idont-subscription.lang",
+    theme: "idont-subscription.theme"
+  };
+
+  var DEFAULT_BRAND = {
+    name: "idont-subscription",
+    subtitle: { fa: "پنل اشتراک", en: "Subscription panel" },
+    logoUrl: ""
+  };
+
+  var BRAND = window.IDONT_SUBSCRIPTION_BRAND || window.PASARGUARD_BRAND || window.PANEL_BRAND || DEFAULT_BRAND;
+  if (!BRAND || typeof BRAND !== "object") BRAND = DEFAULT_BRAND;
 
   var CONFIG = window.PASARGUARD_CONFIG || window.PANEL_USER_CONFIG || {};
 
+  function storageGet(key, fallback) {
+    try {
+      var value = localStorage.getItem(key);
+      return value == null ? fallback : value;
+    } catch (e) {
+      return fallback;
+    }
+  }
+
+  function storageSet(key, value) {
+    try { localStorage.setItem(key, value); } catch (e) {}
+  }
+
   var state = {
-    lang: localStorage.getItem(LS.lang) || "fa",
-    theme: localStorage.getItem(LS.theme) || "dark",
+    lang: storageGet(LS.lang, "fa"),
+    theme: storageGet(LS.theme, "dark"),
     ctx: null,
     user: null,
     headers: {},
@@ -3273,26 +3306,51 @@
   function parseInput(raw) {
     raw = String(raw || "").trim().replace(/[\u200B-\u200D\uFEFF]/g, "");
     if (!raw) return null;
-    try {
-      if (/^[a-z][a-z0-9+.-]*:/i.test(raw)) {
-        var u = new URL(raw);
-        var keys = ["token", "sub", "sub_token", "subscription", "subscription_token"];
-        for (var i = 0; i < keys.length; i++) {
-          var q = u.searchParams.get(keys[i]);
-          if (q) return { panel: u.searchParams.get("panel") || u.searchParams.get("panel_url") || u.origin, token: cleanToken(q) };
-        }
-        var path = u.pathname.replace(/\/+$/, "").replace(/\/(?:info|apps|links|raw|usage)$/i, "");
-        var parts = path.split("/").filter(Boolean);
-        var token = parts.length ? cleanToken(parts[parts.length - 1]) : "";
-        if (token && !/\.(?:html?|php)$/i.test(token)) return { panel: u.origin, token: token, subPath: path };
+
+    function parseUrl(u) {
+      var keys = ["token", "sub", "sub_token", "subscription", "subscription_token"];
+      for (var i = 0; i < keys.length; i++) {
+        var q = u.searchParams.get(keys[i]);
+        if (q) return {
+          panel: u.searchParams.get("panel") || u.searchParams.get("panel_url") || u.origin,
+          token: cleanToken(q),
+          routeStyle: "token-first"
+        };
       }
-    } catch (e) {}
-    if (raw.indexOf("/") > -1 && raw.indexOf("://") === -1) {
-      var p = raw.split(/[?#]/)[0].replace(/\/+$/, "").replace(/\/(?:info|apps|links|raw|usage)$/i, "");
-      var ps = p.split("/").filter(Boolean);
-      if (ps.length) return { token: cleanToken(ps[ps.length - 1]), subPath: p.charAt(0) === "/" ? p : "/" + p };
+
+      var path = u.pathname.replace(/\/+$/, "");
+      var parts = path.split("/").filter(Boolean);
+      if (!parts.length) return null;
+
+      var formats = ["info", "usage", "apps", "links", "raw", "sing_box", "clash_meta", "clash", "outline", "wireguard", "xray"];
+      var last = String(parts[parts.length - 1] || "").toLowerCase();
+
+      // A subscription page may itself be mounted at paths such as /info/<token>.
+      // Only treat a known format as a suffix when it is the final path segment.
+      if (formats.indexOf(last) >= 0 && parts.length >= 2) {
+        var token = cleanToken(parts[parts.length - 2]);
+        var basePath = "/" + parts.slice(0, -1).join("/");
+        if (token) return { panel: u.origin, token: token, subPath: basePath, routeStyle: "token-first" };
+      }
+
+      var pageToken = cleanToken(parts[parts.length - 1]);
+      if (pageToken && !/\.(?:html?|php)$/i.test(pageToken)) {
+        return { panel: u.origin, token: pageToken, subPath: path, routeStyle: "token-first" };
+      }
+      return null;
     }
-    if (!/\s/.test(raw) && raw.indexOf("/") === -1 && raw.indexOf("?") === -1) return { token: cleanToken(raw) };
+
+    try {
+      if (/^[a-z][a-z0-9+.-]*:/i.test(raw)) return parseUrl(new URL(raw));
+    } catch (e) {}
+
+    if (raw.indexOf("/") > -1 && raw.indexOf("://") === -1) {
+      try { return parseUrl(new URL("https://placeholder.invalid/" + raw.replace(/^\/+/, ""))); } catch (e) {}
+    }
+
+    if (!/\s/.test(raw) && raw.indexOf("/") === -1 && raw.indexOf("?") === -1) {
+      return { token: cleanToken(raw), routeStyle: "token-first" };
+    }
     return null;
   }
 
@@ -3302,14 +3360,18 @@
     var panel = String(parsed.panel || panelInput || window.location.origin || "").trim().replace(/\/+$/, "");
     if (panel && !/^https?:\/\//i.test(panel)) panel = "https://" + panel;
     if (!panel || panel === "null") return null;
-    var subPath = parsed.subPath || "/sub/" + encodeURIComponent(parsed.token);
+
+    var token = cleanToken(parsed.token);
+    var subPath = parsed.subPath || "/sub/" + encodeURIComponent(token);
     if (subPath.charAt(0) !== "/") subPath = "/" + subPath;
     subPath = subPath.replace(/\/+$/, "");
+
     return {
       panel: panel,
-      token: parsed.token,
+      token: token,
+      routeStyle: "token-first",
       subPath: subPath,
-      subUrl: panel + subPath + "/",
+      subUrl: panel + subPath,
       infoUrl: panel + subPath + "/info",
       appsUrl: panel + subPath + "/apps",
       linksUrl: panel + subPath + "/links",
@@ -3401,18 +3463,32 @@
       }).catch(function () { return []; });
   }
 
-  function usageUrl(range) {
+  function usageUrls(range) {
     var end = new Date();
     var days = range === "7d" ? 7 : 1;
     var start = new Date(end.getTime() - days * 86400000);
-    return state.ctx.usageUrl + "?period=" + encodeURIComponent(range === "1d" ? "hour" : "day") + "&start=" + encodeURIComponent(start.toISOString()) + "&end=" + encodeURIComponent(end.toISOString());
+    var period = range === "1d" ? "hour" : "day";
+    var base = state.ctx.usageUrl;
+    var query = "?period=" + encodeURIComponent(period) + "&start=" + encodeURIComponent(start.toISOString()) + "&end=" + encodeURIComponent(end.toISOString());
+    return [base + query, base];
   }
 
   function fetchUsage(range) {
     if (!state.ctx) return Promise.resolve(null);
-    return request(usageUrl(range), { credentials: "same-origin", headers: { Accept: "application/json" } }, 10000)
-      .then(function (res) { return res.ok ? res.json() : null; })
-      .catch(function () { return null; });
+    var urls = usageUrls(range);
+    function attempt(index) {
+      if (index >= urls.length) return Promise.resolve(null);
+      return request(urls[index], { credentials: "same-origin", headers: { Accept: "application/json" } }, 10000)
+        .then(function (res) {
+          if (!res.ok) return attempt(index + 1);
+          return res.json().then(function (data) {
+            var points = normalizeUsage(data);
+            return points.length ? data : attempt(index + 1);
+          });
+        })
+        .catch(function () { return attempt(index + 1); });
+    }
+    return attempt(0);
   }
 
   function stamp(value) {
@@ -3612,10 +3688,10 @@
     var badge = $("expiry-badge");
     if (!donut || !daysEl || !percentEl || !badge) return;
 
-    if (!expire || status === "on_hold") {
+    if (!expire) {
       donut.style.setProperty("--progress", "100%");
-      daysEl.textContent = expire ? num(daysLeft(expire).split(" ")[0] || "—") : "∞";
-      percentEl.textContent = expire ? "100%" : "∞";
+      daysEl.textContent = "∞";
+      percentEl.textContent = "∞";
       badge.textContent = tr("active");
       return;
     }
@@ -3639,7 +3715,7 @@
     donut.style.setProperty("--progress", progress.toFixed(2) + "%");
     daysEl.textContent = leftDays > 0 ? num(leftDays) : "0";
     percentEl.textContent = num(Math.round(progress)) + "%";
-    badge.textContent = leftDays > 0 ? (num(leftDays) + " " + tr("days")) : tr("expired");
+    badge.textContent = status === "on_hold" ? tr("on_hold") : (leftDays > 0 ? (num(leftDays) + " " + tr("days")) : tr("expired"));
   }
 
   function renderAccount() {
@@ -3834,6 +3910,7 @@
       $("os-grid").innerHTML = '<div class="empty">' + esc(tr("noApps")) + '</div>';
       return;
     }
+
     var groups = {};
     state.apps.forEach(function (app) {
       var key = canonical(app.platform);
@@ -3841,17 +3918,26 @@
       groups[key].push(app);
     });
     state.groups = groups;
+
     var current = currentOS();
     var order = ["ios", "android", "windows", "macos", "linux", "appletv", "androidtv", "web", "other"];
     if (groups[current]) order = [current].concat(order.filter(function (x) { return x !== current; }));
     var keys = order.filter(function (key) { return groups[key] && groups[key].length; });
     Object.keys(groups).sort().forEach(function (key) { if (keys.indexOf(key) < 0) keys.push(key); });
-    $("os-grid").innerHTML = keys.map(function (key) {
+
+    $("os-grid").innerHTML = keys.map(function (key, index) {
       var list = groups[key];
-      return '<article class="os-card ' + (key === current ? "current" : "") + '" data-platform="' + esc(key) + '">' +
-        '<span class="os-icon">' + platformIcon(key) + '</span><span class="os-info"><span class="os-top"><span class="os-name">' + esc(platformLabel(key)) + '</span><span class="badge-wrap">' +
+      var open = key === current || index === 0;
+      return '<article class="os-card ' + (key === current ? "current " : "") + (open ? "open" : "") + '" data-platform="' + esc(key) + '">' +
+        '<button class="os-toggle" type="button" aria-expanded="' + (open ? "true" : "false") + '" aria-controls="apps-' + esc(key) + '">' +
+        '<span class="os-icon" aria-hidden="true">' + platformIcon(key) + '</span>' +
+        '<span class="os-info"><span class="os-top"><span class="os-name">' + esc(platformLabel(key)) + '</span><span class="badge-wrap">' +
         (key === current ? '<span class="badge current-tag">' + esc(tr("yourOS")) + '</span>' : '') +
-        '</span></span></span><button class="small-btn os-open" type="button">' + esc(tr("openApps")) + '</button></article>';
+        '</span><span class="os-count">' + num(list.length) + ' ' + esc(tr("app")) + '</span></span>' +
+        '<span class="os-chevron" aria-hidden="true">' + svg("chevron") + '</span>' +
+        '</button>' +
+        '<div class="os-content" id="apps-' + esc(key) + '"><div class="inline-app-list">' + list.map(appHtml).join("") + '</div></div>' +
+        '</article>';
     }).join("");
   }
 
@@ -3888,22 +3974,69 @@
 
   function normalizeUsage(data) {
     var out = {};
-    var stats = data && (data.stats || data.data || data.usage || data);
-    function add(point) {
-      if (!point || typeof point !== "object") return;
-      var key = point.period_start || point.time || point.date || point.created_at;
-      var value = point.total_traffic || point.traffic || point.used_traffic || point.value || 0;
+    var stats = data && (data.stats || data.usages || data.data || data.usage || data);
+
+    function numeric(value) {
+      if (value == null || value === "") return 0;
+      var n = Number(value);
+      return isFinite(n) ? n : 0;
+    }
+
+    function add(point, fallbackKey) {
+      if (point == null) return;
+      if (typeof point === "number") {
+        if (fallbackKey) out[fallbackKey] = (out[fallbackKey] || 0) + point;
+        return;
+      }
+      if (typeof point !== "object") return;
+
+      var key = point.period_start || point.periodStart || point.time || point.timestamp || point.date || point.created_at || point.createdAt || fallbackKey;
       if (!key) return;
-      out[key] = (out[key] || 0) + (Number(value) || 0);
+
+      var value = point.total_traffic;
+      if (value == null) value = point.totalTraffic;
+      if (value == null) value = point.traffic;
+      if (value == null) value = point.used_traffic;
+      if (value == null) value = point.usedTraffic;
+      if (value == null) value = numeric(point.upload) + numeric(point.download);
+      if (value == null) value = numeric(point.uplink) + numeric(point.downlink);
+      if (value == null) value = point.value;
+
+      var amount = numeric(value);
+      if (!isFinite(amount)) return;
+      out[String(key)] = (out[String(key)] || 0) + amount;
     }
-    if (Array.isArray(stats)) stats.forEach(add);
-    else if (stats && typeof stats === "object") {
-      Object.keys(stats).forEach(function (key) {
-        if (Array.isArray(stats[key])) stats[key].forEach(add);
-        else if (typeof stats[key] === "number") out[key] = (out[key] || 0) + stats[key];
-      });
+
+    function walk(value, fallbackKey) {
+      if (Array.isArray(value)) {
+        value.forEach(function (item) { walk(item, fallbackKey); });
+        return;
+      }
+      if (value && typeof value === "object") {
+        if (value.period_start || value.periodStart || value.time || value.timestamp || value.date || value.created_at || value.createdAt) {
+          add(value, fallbackKey);
+          return;
+        }
+        Object.keys(value).forEach(function (key) {
+          var child = value[key];
+          if (Array.isArray(child) || (child && typeof child === "object")) walk(child, key);
+          else if (typeof child === "number" || (typeof child === "string" && child.trim() !== "" && isFinite(Number(child)))) add(Number(child), key);
+        });
+        return;
+      }
+      add(value, fallbackKey);
     }
-    return Object.keys(out).sort().map(function (key) { return { time: key, value: out[key] }; });
+
+    walk(stats, null);
+
+    return Object.keys(out).sort(function (a, b) {
+      var ta = stamp(a);
+      var tb = stamp(b);
+      if (ta != null && tb != null) return ta - tb;
+      return String(a).localeCompare(String(b));
+    }).map(function (key) { return { time: key, value: out[key] }; }).filter(function (item) {
+      return isFinite(item.value) && item.value >= 0;
+    });
   }
 
   function renderUsage(points, range) {
@@ -4092,6 +4225,9 @@
     state.qrPromise = new Promise(function (resolve, reject) {
       var script = document.createElement("script");
       script.src = "https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js";
+      script.integrity = "sha512-CNgIRecGo7nphbeZ04Sc13ka07paqdeTu0WR1IM4kNcpmBAUSHSQX0FslNhTDadL4O5SAGapGt4FodqL8My0mA==";
+      script.crossOrigin = "anonymous";
+      script.referrerPolicy = "no-referrer";
       script.async = true;
       script.onload = resolve;
       script.onerror = reject;
@@ -4231,8 +4367,6 @@
     state.configItems = [];
     state.usageRaw = null;
     state.usageRequest++;
-    localStorage.setItem(LS.panel, ctx.panel);
-    localStorage.setItem(LS.token, ctx.subUrl);
     loading(true);
     renderConfigs();
     renderSupport();
@@ -4294,14 +4428,24 @@
       }
     });
 
+    $("os-grid").addEventListener("click", function (event) {
+      var toggle = event.target.closest(".os-toggle");
+      if (!toggle) return;
+      var card = toggle.closest(".os-card");
+      if (!card) return;
+      var willOpen = !card.classList.contains("open");
+      card.classList.toggle("open", willOpen);
+      toggle.setAttribute("aria-expanded", willOpen ? "true" : "false");
+    });
+
     $("theme-btn").addEventListener("click", function () {
       state.theme = state.theme === "dark" ? "light" : "dark";
-      localStorage.setItem(LS.theme, state.theme);
+      storageSet(LS.theme, state.theme);
       applyTheme();
     });
     $("lang-btn").addEventListener("click", function () {
       state.lang = state.lang === "fa" ? "en" : "fa";
-      localStorage.setItem(LS.lang, state.lang);
+      storageSet(LS.lang, state.lang);
       applyLang();
     });
     document.querySelectorAll("[data-view]").forEach(function (btn) {
@@ -4353,12 +4497,8 @@
       if (auto) return loadAll(auto);
       var configured = makeContext(CONFIG.panelUrl || CONFIG.panel || "", CONFIG.subscriptionUrl || CONFIG.subscription || CONFIG.token || CONFIG.sub || "");
       if (configured) return loadAll(configured);
-      var savedPanel = localStorage.getItem(LS.panel);
-      var savedToken = localStorage.getItem(LS.token);
-      if (savedPanel && savedToken) {
-        var ctx = makeContext(savedPanel, savedToken);
-        if (ctx) loadAll(ctx);
-      }
+      // Subscription tokens are intentionally not persisted. The page derives the token from its URL.
+
     });
   }
 
